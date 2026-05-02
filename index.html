@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WinStore</title>
+  <style>
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #ffffff; color: #333; }
+    header { position: relative; height: 250px; color: white; text-align: center; display: flex; flex-direction: column; justify-content: center; background: #bb8827; }
+    header::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 100px; background: white; border-top-left-radius: 70% 100%; border-top-right-radius: 30% 100%; }
+    nav { display: flex; justify-content: space-between; padding: 15px 20px; position: relative; z-index: 2; }
+    .btn { background: #bb8827; color: white; padding: 8px 14px; border: none; border-radius: 10px; cursor: pointer; }
+    .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 40px 20px; }
+    .card { background: #fff; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; transition: 0.2s; }
+    .card:hover { transform: translateY(-5px); }
+    .price { color: #bb8827; font-weight: bold; margin: 10px 0; }
+    #cart { position: fixed; right: 20px; bottom: 20px; background: #bb8827; color: white; padding: 15px; border-radius: 12px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div><b>WinStore</b></div>
+    <button class="btn" onclick="goDiscord()">Join Discord</button>
+  </nav>
+  <h1>WinStore</h1>
+  <p>Kebutuhan Discord Owner 🔥</p>
+</header>
+
+<div class="container" id="products"></div>
+
+<div id="cart" onclick="viewCart()">
+  🛒 Cart (<span id="cartCount">0</span>)
+</div>
+
+<script>
+  const products = [
+    {name: "Discord Nitro", price: 40000},
+    {name: "Server Boost", price: 40000},
+    {name: "Setup Server", price: 20000}
+  ];
+
+  let cart = [];
+
+  function renderProducts() {
+    const container = document.getElementById('products');
+    container.innerHTML = "";
+    products.forEach((p, i) => {
+      container.innerHTML += `
+        <div class="card">
+          <h3>${p.name}</h3>
+          <p class="price">Start From Rp ${p.price}</p>
+          <button class="btn" onclick="addToCart(${i})">Tambah</button>
+        </div>
+      `;
+    });
+  }
+
+  function addToCart(index) {
+    cart.push(products[index]);
+    document.getElementById('cartCount').innerText = cart.length;
+  }
+
+  function viewCart() {
+    if (cart.length === 0) {
+      alert("Cart kosong");
+      return;
+    }
+
+    let text = "Cart kamu:\n";
+    cart.forEach((item, i) => {
+      text += `${i+1}. ${item.name} - Rp ${item.price}\n`;
+    });
+
+    if (confirm(text + "\n\nCopy order & lanjut ke Discord?")) {
+      copyOrder();
+      checkoutDiscord();
+    }
+  }
+
+  function copyOrder() {
+    let daftar = "";
+    cart.forEach((item, i) => {
+      daftar += (i+1) + ". " + item.name + "";
+    });
+
+    let message = "**📋 FORMAT ORDER**\n\n" +
+      "> Nama: \n" +
+      "> Barang yang dipesan:\n" + daftar +
+      "> Metode pembayaran:\n" +
+      "> • GOPAY (Discord Service)\n" +
+      "> Catatan tambahan: (Opsional)\n\n" +
+      "***Dengan mengirim Format Order, pembeli dianggap setuju dengan TOS WinStore***\n" +
+      "PING: <@&1475731578087805068>";
+
+    navigator.clipboard.writeText(message).then(() => {
+      alert("Format order berhasil dicopy! Tinggal paste di Discord 🔥");
+    }).catch(() => {
+      alert("Gagal copy, copy manual ya 😅\n\n" + message);
+    });
+  }
+
+  function checkoutDiscord() {
+    window.open("https://discord.gg/UMUhFyCHMC", "_blank");
+  }
+
+  function goDiscord() {
+    window.open("https://discord.gg/UMUhFyCHMC", "_blank");
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>
